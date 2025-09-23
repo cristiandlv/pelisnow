@@ -22,7 +22,7 @@ export default function MovieCard({ id, title, poster, year }: MovieCardProps) {
     <div className="group rounded-xl overflow-hidden shadow-md transition-all">
   <Link href={`/movies/${id}`} className="block">
     <div className="relative w-full aspect-[2/3]">
-      {/* Botón DENTRO y con z-index alto */}
+      
       <button
         onClick={(e) => {
           e.preventDefault();
