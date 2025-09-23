@@ -4,21 +4,27 @@
    VARIABLES BASE
    ========================= */
 :root {
-  --bg: #ffffff;          /* Fondo principal */
-  --text: #111111;        /* Texto */
-  --navbar: #f1f1f1;      /* Fondo navbar */
-  --footer: #e5e5e5;      /* Fondo footer */
-  --card: #f9f9f9;        /* Fondo tarjetas/contenedores */
-  --border: #d1d1d1;      /* Bordes */
+  --bg: #fafafa;          
+  --text: #1e1e1e;        
+  --navbar: #ffffffcc;    
+  --footer: #f5f5f5;      
+  --card: #ffffff;        
+  --border: #e5e5e5;      
+  --accent: rebeccapurple;
+  --accent-light: #a678d1;
+  --accent-dark: #5a2d91;
 }
 
 html.dark {
   --bg: #111111;
   --text: #f9f9f9;
-  --navbar: #1a1a1a;
+  --navbar: #1a1a1acc;
   --footer: #0d0d0d;
   --card: #1f1f1f;
   --border: #333333;
+  --accent: rebeccapurple;
+  --accent-light: #a678d1;
+  --accent-dark: #5a2d91;
 }
 
 /* =========================
@@ -27,8 +33,9 @@ html.dark {
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
   transition: background 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* =========================
@@ -37,6 +44,8 @@ body {
 nav {
   background-color: var(--navbar);
   color: var(--text);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
   transition: background 0.3s, color 0.3s;
 }
 
@@ -46,6 +55,7 @@ nav {
 footer {
   background-color: var(--footer);
   color: var(--text);
+  border-top: 1px solid var(--border);
   transition: background 0.3s, color 0.3s;
 }
 
@@ -56,84 +66,88 @@ footer {
 .card {
   background-color: var(--card);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   padding: 1rem;
-  transition: background 0.3s, color 0.3s, border 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s;
 }
 
 /* =========================
-   INPUTS & BOTONES
+   INPUTS
    ========================= */
 input, textarea, select {
   background-color: var(--card);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  padding: 0.5rem;
-  transition: background 0.3s, color 0.3s, border 0.3s;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
 }
 
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102,51,153,0.15);
+}
+
+/* =========================
+   BOTONES
+   ========================= */
 button {
-  background-color: var(--navbar);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s, color 0.3s, border 0.3s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 button:hover {
-  opacity: 0.9;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+button:active {
+  background: var(--accent-dark);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2) inset;
+}
 
-/* Este botón ignora el estilo global */
-/* botón favorito: reset + tamaño redondo + fondo semitransparente */
-/* botón favorito: reset + tamaño redondo + fondo semitransparente */
+/* =========================
+   FAVORITOS
+   ========================= */
 .fav-btn {
-  all: unset; /* resetea lo que rompa */
+  all: unset;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   position: absolute !important;
-
-  /* posición */
-  top: 8px;   /* separa del borde superior */
-  right: 8px; /* separa del borde derecho */
-
-  width: 36px;
-  height: 36px;
+  top: 8px;
+  right: 8px;
+  width: 38px;
+  height: 38px;
   border-radius: 9999px;
   z-index: 50; 
-  background-color: rgba(0,0,0,0.45); /* fondo oscuro semi */
+  background-color: rgba(0,0,0,0.5);
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.15s ease, transform 0.12s ease;
-  padding: 0; 
+  transition: background-color 0.15s ease;
 }
 
-/* hover/focus */
-.fav-btn:hover { background-color: rgba(0,0,0,0.6); transform: scale(1.2) translateY(0px); }
-.fav-btn:active { transform: translateY(0); }
-
-
-/* si querés forzar que cualquier svg dentro use currentColor para stroke/fill */
+.fav-btn:hover { background-color: rgba(0,0,0,0.7); }
 .fav-btn svg { display: block; }
-
-
 
 /* =========================
    ESTADOS
    ========================= */
 .loading-spinner {
-  border: 4px solid var(--border);       /* gris adaptado al tema */
-  border-top-color: rebeccapurple;       /* acento visible en ambos modos */
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
   animation: spin 1s linear infinite;
-  
 }
 
 .no-results {
@@ -144,11 +158,9 @@ button:hover {
   padding: 1rem;
   text-align: center;
   margin-top: 2.5rem;
-  transition: background 0.3s, color 0.3s, border 0.3s;
+  transition: all 0.3s;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }

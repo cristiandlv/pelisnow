@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useFavorites } from "@/hook/useFavorites";
 import MovieCard from "@/components/MovieCard";
 import { Heart } from "lucide-react";
+import Image from "next/image";
+
 
 export default function FavoritesPage() {
   const { favs } = useFavorites();  // 👈 ahora sí usamos favs
@@ -37,15 +39,19 @@ export default function FavoritesPage() {
   }, [favs]);
 
  return (
- <main className="min-h-screen px-6 py-10 flex flex-col items-center">
+ <main className="min-h-screen px-6 py-10 flex flex-col items-center"> 
   <h1 className="flex items-center justify-center text-3xl font-bold mb-10 mt-16">
-    <Heart
-      className="text-purple-700 mr-2 "
-      size={22}
-      fill="currentColor"
-    />
+   
     <span className="bg-gradient-to-r from-purple-800 to-purple-900 bg-clip-text text-transparent">
-      Favoritos
+       
+              <Image
+                src="/favs.png"
+                alt="Pelisnow favs"
+                width={40}   
+                height={40}
+                priority
+                className="drop-shadow-lg"
+              /> 
     </span>
   </h1>
 

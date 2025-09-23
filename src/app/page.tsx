@@ -6,13 +6,11 @@ import MovieCard from "@/components/MovieCard";
 import Hero from "@/components/Hero";
 import FeaturedSlider from "@/components/FeaturedSlider";
 
-
 export default function HomePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [searchInput, setSearchInput] = useState<string>(""); // nunca undefined
-
+  const [searchInput, setSearchInput] = useState<string>(""); 
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -59,14 +57,18 @@ export default function HomePage() {
     if (!searchInput) return;
     const nextPage = 1;
     setQuery(searchInput);
-    router.push(`/?q=${encodeURIComponent(searchInput)}&page=${nextPage}`);
+    router.push(`/?q=${encodeURIComponent(searchInput)}&page=${nextPage}`, {
+      scroll: false, // ✅ evita que se suba al top
+    });
     setPage(nextPage);
     fetchMovies(searchInput, nextPage);
   };
 
   const handleChangePage = (nextPage: number) => {
     if (!query) return;
-    router.push(`/?q=${encodeURIComponent(query)}&page=${nextPage}`);
+    router.push(`/?q=${encodeURIComponent(query)}&page=${nextPage}`, {
+      scroll: false, // ✅ evita que se suba al top
+    });
     setPage(nextPage);
     fetchMovies(query, nextPage);
   };
@@ -79,36 +81,27 @@ export default function HomePage() {
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >
       <Hero 
-  searchInput={searchInput}
-  setSearchInput={setSearchInput}
-  onSearch={handleSearch}
-/>
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        onSearch={handleSearch}
+      />
       <main className="p-6 max-w-7xl mx-auto">
-        {/* Buscador */}
+        {/* Estado de carga */}
+        {loading && (
+          <main
+            className="min-h-screen flex items-center justify-center"
+            style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
+          >
+            <div className="loading-spinner"></div>
+          </main>
+        )}
 
-
-
-
-            {/* Estado de carga */}
-     {loading && (
-  <main
-    className="min-h-screen flex items-center justify-center"
-    style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
-  >
-    <div className="loading-spinner"></div>
-  </main>
-  
-)}
-
-
-
-      {/* Sin resultados */}
-      {!loading && query && uniqueMovies.length === 0 && (
-        <p className="no-results">
-          No se encontraron resultados para "{query}" 😢
-        </p>
-      )}
-
+        {/* Sin resultados */}
+        {!loading && query && uniqueMovies.length === 0 && (
+          <p className="no-results">
+            No se encontraron resultados para "{query}" 😢
+          </p>
+        )}
 
         {/* Grid de películas */}
         {!loading && uniqueMovies.length > 0 && (
