@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Pelisnow",
@@ -20,6 +21,9 @@ export default function RootLayout({
 
         {/* Contenido principal */}
         <main className="px-6 py-8">{children}</main>
+
+        {/* Footer */}
+        <Footer/>
       </body>
     </html>
   );

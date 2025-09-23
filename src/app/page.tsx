@@ -3,10 +3,15 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MovieCard from "@/components/MovieCard";
+import Hero from "@/components/Hero";
+import FeaturedSlider from "@/components/FeaturedSlider";
+
 
 export default function HomePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [searchInput, setSearchInput] = useState<string>(""); // nunca undefined
 
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState<any[]>([]);
@@ -20,11 +25,7 @@ export default function HomePage() {
   );
 
   async function fetchMovies(search: string, pageNumber = 1) {
-    if (!search) {
-      setMovies([]);
-      setTotalResults(0);
-      return;
-    }
+    if (!search) return;
     setLoading(true);
     const res = await fetch(
       `https://www.omdbapi.com/?s=${encodeURIComponent(
@@ -37,21 +38,30 @@ export default function HomePage() {
     setTotalResults(Number(data.totalResults) || 0);
   }
 
-  // Al cargar, tomar q y page de la URL
   useEffect(() => {
     const q = searchParams.get("q") || "";
     const p = Number(searchParams.get("page") || "1");
+
+    if (!q) {
+      setQuery("");
+      setPage(1);
+      setMovies([]);
+      setTotalResults(0);
+      return;
+    }
+
     setQuery(q);
     setPage(p);
-    if (q) fetchMovies(q, p);
+    fetchMovies(q, p);
   }, [searchParams]);
 
   const handleSearch = () => {
-    if (!query) return;
+    if (!searchInput) return;
     const nextPage = 1;
-    router.push(`/?q=${encodeURIComponent(query)}&page=${nextPage}`);
+    setQuery(searchInput);
+    router.push(`/?q=${encodeURIComponent(searchInput)}&page=${nextPage}`);
     setPage(nextPage);
-    fetchMovies(query, nextPage);
+    fetchMovies(searchInput, nextPage);
   };
 
   const handleChangePage = (nextPage: number) => {
@@ -64,67 +74,97 @@ export default function HomePage() {
   const totalPages = Math.ceil(totalResults / 10);
 
   return (
-    <main className="min-h-screen bg-neutral-100 dark:bg-neutral-950 text-gray-900 dark:text-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">🎬 Pelisnow</h1>
+    <div
+      className="min-h-screen transition-colors duration-300"
+      style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
+    >
+      <Hero 
+  searchInput={searchInput}
+  setSearchInput={setSearchInput}
+  onSearch={handleSearch}
+/>
+      <main className="p-6 max-w-7xl mx-auto">
+        {/* Buscador */}
 
-      <div className="flex gap-2 mb-6">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Buscar película..."
-          className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-neutral-800"
-        />
-        <button
-          onClick={handleSearch}
-          className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
-        >
-          Buscar
-        </button>
-      </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-        {loading ? (
-          <p>Cargando...</p>
-        ) : (
-          uniqueMovies.map((m) => (
-            <MovieCard
-              id={m.imdbID}
-              key={m.imdbID}
-              title={m.Title}
-              poster={m.Poster}
-              year={m.Year}
-              query={query}
-              page={page}
-            />
-          ))
-        )}
-      </div>
 
-      {/* Paginación simple */}
-      {totalResults > 0 && (
-        <div className="mt-6 flex items-center justify-center gap-3">
-          <button
-            disabled={page <= 1}
-            onClick={() => handleChangePage(page - 1)}
-            className="px-3 py-1 rounded bg-gray-200 dark:bg-neutral-800 disabled:opacity-50"
-          >
-            ← Anterior
-          </button>
 
-          <span className="text-sm text-gray-600 dark:text-gray-300">
-            Página {page} de {totalPages}
-          </span>
+            {/* Estado de carga */}
+     {loading && (
+  <main
+    className="min-h-screen flex items-center justify-center"
+    style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
+  >
+    <div className="loading-spinner"></div>
+  </main>
+  
+)}
 
-          <button
-            disabled={page >= totalPages}
-            onClick={() => handleChangePage(page + 1)}
-            className="px-3 py-1 rounded bg-gray-200 dark:bg-neutral-800 disabled:opacity-50"
-          >
-            Siguiente →
-          </button>
-        </div>
+
+
+      {/* Sin resultados */}
+      {!loading && query && uniqueMovies.length === 0 && (
+        <p className="no-results">
+          No se encontraron resultados para "{query}" 😢
+        </p>
       )}
-    </main>
+
+
+        {/* Grid de películas */}
+        {!loading && uniqueMovies.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            {uniqueMovies.map((m) => (
+              <MovieCard
+                id={m.imdbID}
+                key={m.imdbID}
+                title={m.Title}
+                poster={m.Poster}
+                year={m.Year}
+                query={query}
+                page={page}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Paginación */}
+        {query && totalResults > 0 && (
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <button
+              disabled={page <= 1}
+              onClick={() => handleChangePage(page - 1)}
+              className="px-3 py-1 rounded bg-gray-200 dark:bg-neutral-800 disabled:opacity-50"
+            >
+              ←
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .slice(Math.max(0, page - 3), Math.min(totalPages, page + 2))
+              .map((p) => (
+                <button
+                  key={p}
+                  onClick={() => handleChangePage(p)}
+                  className={`px-3 py-1 rounded ${
+                    p === page
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+
+            <button
+              disabled={page >= totalPages}
+              onClick={() => handleChangePage(page + 1)}
+              className="px-3 py-1 rounded bg-gray-200 dark:bg-neutral-800 disabled:opacity-50"
+            >
+              →
+            </button>
+          </div>
+        )}
+      </main>
+      <FeaturedSlider />
+    </div>
   );
 }
