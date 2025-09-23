@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MovieCard from "@/components/MovieCard";
 import Hero from "@/components/Hero";
 import FeaturedSlider from "@/components/FeaturedSlider";
 
-export default function HomePage() {
+function MoviesGrid() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [searchInput, setSearchInput] = useState<string>(""); 
+  const [searchInput, setSearchInput] = useState<string>("");
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -58,7 +58,7 @@ export default function HomePage() {
     const nextPage = 1;
     setQuery(searchInput);
     router.push(`/?q=${encodeURIComponent(searchInput)}&page=${nextPage}`, {
-      scroll: false, // ✅ evita que se suba al top
+      scroll: false,
     });
     setPage(nextPage);
     fetchMovies(searchInput, nextPage);
@@ -67,7 +67,7 @@ export default function HomePage() {
   const handleChangePage = (nextPage: number) => {
     if (!query) return;
     router.push(`/?q=${encodeURIComponent(query)}&page=${nextPage}`, {
-      scroll: false, // ✅ evita que se suba al top
+      scroll: false,
     });
     setPage(nextPage);
     fetchMovies(query, nextPage);
@@ -76,34 +76,26 @@ export default function HomePage() {
   const totalPages = Math.ceil(totalResults / 10);
 
   return (
-    <div
-      className="min-h-screen transition-colors duration-300"
-      style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
-    >
-      <Hero 
+    <>
+      <Hero
         searchInput={searchInput}
         setSearchInput={setSearchInput}
         onSearch={handleSearch}
       />
+
       <main className="p-6 max-w-7xl mx-auto">
-        {/* Estado de carga */}
         {loading && (
-          <main
-            className="min-h-screen flex items-center justify-center"
-            style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
-          >
+          <main className="min-h-screen flex items-center justify-center">
             <div className="loading-spinner"></div>
           </main>
         )}
 
-        {/* Sin resultados */}
         {!loading && query && uniqueMovies.length === 0 && (
           <p className="no-results">
             No se encontraron resultados para "{query}" 😢
           </p>
         )}
 
-        {/* Grid de películas */}
         {!loading && uniqueMovies.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
             {uniqueMovies.map((m) => (
@@ -120,7 +112,6 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Paginación */}
         {query && totalResults > 0 && (
           <div className="mt-6 flex items-center justify-center gap-2">
             <button
@@ -158,6 +149,19 @@ export default function HomePage() {
         )}
       </main>
       <FeaturedSlider />
+    </>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <div
+      className="min-h-screen transition-colors duration-300"
+      style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
+    >
+      <Suspense fallback={<p className="text-center">Cargando PelisNow...</p>}>
+        <MoviesGrid />
+      </Suspense>
     </div>
   );
 }
