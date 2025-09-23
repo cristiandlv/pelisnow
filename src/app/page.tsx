@@ -23,7 +23,7 @@ function MoviesGrid() {
   );
 
   async function fetchMovies(search: string, pageNumber = 1) {
-    const cleanSearch = search.trim(); // 🔑 elimina espacios extra
+    const cleanSearch = search.trim(); 
     if (!cleanSearch) return;
 
     setLoading(true);
@@ -39,7 +39,7 @@ function MoviesGrid() {
   }
 
   useEffect(() => {
-    const q = (searchParams.get("q") || "").trim(); // 🔑 limpia la query
+    const q = (searchParams.get("q") || "").trim(); 
     const p = Number(searchParams.get("page") || "1");
 
     if (!q) {
@@ -56,8 +56,7 @@ function MoviesGrid() {
   }, [searchParams]);
 
   const handleSearch = () => {
-    const cleanQuery = searchInput.trim(); // 🔑 limpia input
-    if (!cleanQuery) return;
+    const cleanQuery = searchInput.trim(); 
 
     const nextPage = 1;
     setQuery(cleanQuery);
@@ -69,8 +68,7 @@ function MoviesGrid() {
   };
 
   const handleChangePage = (nextPage: number) => {
-    const cleanQuery = query.trim(); // 🔑 limpia query
-    if (!cleanQuery) return;
+    const cleanQuery = query.trim(); 
 
     router.push(`/?q=${encodeURIComponent(cleanQuery)}&page=${nextPage}`, {
       scroll: false,
