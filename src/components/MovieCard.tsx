@@ -9,7 +9,10 @@ interface MovieCardProps {
   title: string;
   poster: string;
   year: string;
+  query?: string;
+  page?: number;
 }
+
 
 export default function MovieCard({ id, title, poster, year }: MovieCardProps) {
   const { toggle, isFavorite } = useFavorites();
