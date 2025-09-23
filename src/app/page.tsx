@@ -23,11 +23,13 @@ function MoviesGrid() {
   );
 
   async function fetchMovies(search: string, pageNumber = 1) {
-    if (!search) return;
+    const cleanSearch = search.trim(); // 🔑 elimina espacios extra
+    if (!cleanSearch) return;
+
     setLoading(true);
     const res = await fetch(
       `https://www.omdbapi.com/?s=${encodeURIComponent(
-        search
+        cleanSearch
       )}&page=${pageNumber}&apikey=${process.env.NEXT_PUBLIC_OMDB_KEY}`
     );
     const data = await res.json();
@@ -37,7 +39,7 @@ function MoviesGrid() {
   }
 
   useEffect(() => {
-    const q = searchParams.get("q") || "";
+    const q = (searchParams.get("q") || "").trim(); // 🔑 limpia la query
     const p = Number(searchParams.get("page") || "1");
 
     if (!q) {
@@ -54,23 +56,27 @@ function MoviesGrid() {
   }, [searchParams]);
 
   const handleSearch = () => {
-    if (!searchInput) return;
+    const cleanQuery = searchInput.trim(); // 🔑 limpia input
+    if (!cleanQuery) return;
+
     const nextPage = 1;
-    setQuery(searchInput);
-    router.push(`/?q=${encodeURIComponent(searchInput)}&page=${nextPage}`, {
+    setQuery(cleanQuery);
+    router.push(`/?q=${encodeURIComponent(cleanQuery)}&page=${nextPage}`, {
       scroll: false,
     });
     setPage(nextPage);
-    fetchMovies(searchInput, nextPage);
+    fetchMovies(cleanQuery, nextPage);
   };
 
   const handleChangePage = (nextPage: number) => {
-    if (!query) return;
-    router.push(`/?q=${encodeURIComponent(query)}&page=${nextPage}`, {
+    const cleanQuery = query.trim(); // 🔑 limpia query
+    if (!cleanQuery) return;
+
+    router.push(`/?q=${encodeURIComponent(cleanQuery)}&page=${nextPage}`, {
       scroll: false,
     });
     setPage(nextPage);
-    fetchMovies(query, nextPage);
+    fetchMovies(cleanQuery, nextPage);
   };
 
   const totalPages = Math.ceil(totalResults / 10);
