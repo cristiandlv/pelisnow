@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 PelisNow
 
-## Getting Started
+¡Bienvenido a **PelisNow**! 🚀  
+Este es un proyecto personal donde podés buscar y descubrir películas de forma simple y rápida.  
+Nació como un mini-proyecto dentro del bootcamp, pero lo fui mejorando, agregando nuevas funcionalidades y puliendo el diseño para que se vea más profesional.
 
-First, run the development server:
+---
+
+## ✨ ¿Qué podés hacer en PelisNow?
+
+- 🔍 **Buscar películas** y explorar resultados al instante.
+- ⭐ **Guardar tus favoritas**, que se mantienen gracias a LocalStorage aunque cierres el navegador.
+- 🎞️ Disfrutar de un **slider principal hecho con SwiperJS**, con un diseño más atractivo y responsivo.
+- 📱 Usar la app en cualquier dispositivo, gracias a un diseño **moderno y adaptable con Tailwind CSS**.
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- **React + Next.js**
+- **Tailwind CSS**
+- **SwiperJS**
+- **LocalStorage** para persistencia de favoritos
+
+---
+
+## 📚 Contexto
+
+Este proyecto empezó como un ejercicio dentro del bootcamp, pero lo fui llevando más allá:
+
+- Mejoré el diseño visual y lo adapté a distintos dispositivos.
+- Agregué favoritos con LocalStorage.
+- Incorporé SwiperJS para un slider más atractivo.
+- Trabajé la estructura en Next.js para darle un enfoque más profesional.
+
+En resumen: es un paso más en mi camino como desarrollador frontend, donde busco aplicar lo que aprendí y seguir mejorando con cada iteración.
+
+---
+
+## 📦 Instalación
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. ⬇️ Cloná el repositorio
+   git clone https://github.com/cristiandlv/pelisnow.git
+
+2. 📥 Instalar dependencias
+   npm install
+
+3. 🔑 Configurar variables de entorno
+   Creá un archivo .env.local en la raíz del proyecto y agregá tu clave de la OMDb API:
+   NEXT_PUBLIC_OMDB_KEY=tu_api_key_aqui
+
+4. ▶️ Levantar el servidor de desarrollo
+   npm run dev
+
+5. 🌍 Abrir en el navegador
+   http://localhost:3000 
 ```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🚀 **Deploy:** [https://pelisnow.vercel.app/](https://pelisnow.vercel.app/)  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Autor
 
-To learn more about Next.js, take a look at the following resources:
+👋 Hola! Soy Cristian Dlv, desarrollador frontend argentino 🚀.
+Este es uno de mis primeros proyectos personales, con el que busco seguir aprendiendo y mostrando lo que sé.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📌 Si te interesa, ¡te invito a visitar el deploy y darme feedback!
