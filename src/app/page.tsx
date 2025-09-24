@@ -23,20 +23,42 @@ function MoviesGrid() {
   );
 
   async function fetchMovies(search: string, pageNumber = 1) {
-    const cleanSearch = search.trim(); 
-    if (!cleanSearch) return;
+  const cleanSearch = search.trim(); 
+  if (!cleanSearch) return;
 
+  try {
     setLoading(true);
+
     const res = await fetch(
       `https://www.omdbapi.com/?s=${encodeURIComponent(
         cleanSearch
       )}&page=${pageNumber}&apikey=${process.env.NEXT_PUBLIC_OMDB_KEY}`
     );
+
+    //Validación
+    if (!res.ok) {
+      throw new Error("Error en la respuesta del servidor");
+    }
+
     const data = await res.json();
-    setLoading(false);
+
+    if (data.Response === "False") {
+      throw new Error(data.Error || "No se encontraron resultados");
+    }
+
     setMovies(data.Search || []);
     setTotalResults(Number(data.totalResults) || 0);
+  } catch (error: any) {
+    console.error("Error al obtener películas:", error.message);
+    
+    setMovies([]);
+    setTotalResults(0);
+    alert("No se pudieron cargar las películas. Intenta más tarde.");
+  } finally {
+    setLoading(false);
   }
+}
+
 
   useEffect(() => {
     const q = (searchParams.get("q") || "").trim(); 
